@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n-tiers-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: n-tiers-app
+  template:
+    metadata:
+      labels:
+        app: n-tiers-app
+    spec:
+      containers:
+        - name: frontend
+          image: n-tiers-frontend:latest
+          ports:
+            - containerPort: 80
+
+        - name: backend
+          image: n-tiers-backend:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: username
+            - name: SPRING_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
+            - name: SPRING_POSTGRES_URL
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: url
