@@ -10,7 +10,8 @@ Afin de déployer l'application il convient d'avoir certains pré-requis.
 - la création de secrets Kubernetes dans le namespace via la commande suivante : 
 
 
-```kubectl create secret generic postgres-secret \
+```
+kubectl create secret generic postgres-secret \
   --from-literal=username=myapplication  \
   --from-literal=password=M3P@ssw0rd! \
   --from-literal=url=http://my-db-test.io/
