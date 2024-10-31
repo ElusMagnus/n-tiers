@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: n-tiers-app
+  namespace: ingress-nginx
 spec:
   replicas: 1
   selector:
@@ -14,12 +15,12 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: docker.io/eabouhaydar/n-tiers-frontend:latest
+          image: my-registry.io/my-application/front:1.0
           ports:
             - containerPort: 80
 
         - name: backend
-          image: docker.io/eabouhaydar/n-tiers-backend:latest
+          image: my-registry.io/my-application/backend:1.0
           ports:
             - containerPort: 8080
           env:

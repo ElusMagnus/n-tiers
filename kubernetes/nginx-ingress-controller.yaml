@@ -17,13 +17,17 @@ spec:
     spec:
       containers:
         - name: nginx-ingress
-          image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:latest
+          image: registry.k8s.io/ingress-nginx/controller:v1.11.2
           args:
             - /nginx-ingress-controller
             - --configmap=$(POD_NAMESPACE)/nginx-configuration
             - --publish-service=$(POD_NAMESPACE)/nginx-ingress
             - --annotations-prefix=nginx.ingress.kubernetes.io
           env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             - name: POD_NAMESPACE
               valueFrom:
                 fieldRef:
