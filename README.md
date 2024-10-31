@@ -1,14 +1,7 @@
 # n-tiers
 
-# Pré-requis pour déployer
-
-Afin de déployer l'application il convient d'avoir certains pré-requis.
-
-- un namespace Kubernetes
-- création des secrets GitHub `DOCKERHUB_USERNAME`, `DOCKERHUB_PASSWORD` pour interagir avec DockerHub pour l'étape de build de l'image du backend.
-- création du secret GitHub `KUBE_CONFIG_DATA` via la commande `cat $HOME/.kube/config | base64 -w 0` afin de permettre à la GitHub Action d'interagir avec le namespace kubernetes
-- la création de secrets Kubernetes dans le namespace via la commande suivante : 
-
+## Etapes
+- Création de secrets Kubernetes dans le namespace via la commande suivante : 
 
 ```
 kubectl create secret generic postgres-secret \
@@ -17,4 +10,21 @@ kubectl create secret generic postgres-secret \
   --from-literal=url=http://my-db-test.io/
 ```
 
-Ces variables étant sensibles il est impératif de ne pas les versionner, ceci est fait pour l'illustration et pour les besoins de l'exercice.
+- Déploiement du nginx ingress controller via les commandes suivantes :
+
+```
+kubectl apply -f kubernetes/nginx-ingress-controller.yaml
+kubectl apply -f kubernetes/nginx-ingress-service.yaml
+```
+
+- Build de la partie backend : 
+
+`docker build -t my-registry.io/my-application/backend:1.0 -f backend/Dockerfile .`
+
+- Déploiement de l'application via les commandes suivantes : 
+
+```
+kubectl apply -f kubernetes/deployment.yaml
+kubectl apply -f kubernetes/service.yaml
+kubectl apply -f kubernetes/ingress.yaml
+```
